@@ -1,0 +1,93 @@
+use bollywoodmovies;
+
+create table starcast(star_id int,starname varchar(255),stargender varchar(255));
+insert into starcast value (211,'shahrukh','M');
+insert into starcast value (212,'amir','M');
+insert into starcast value (213,'ranbir','M');
+insert into starcast value (214,'ajay','M');
+insert into starcast value (215,'deepika','F');
+select * from starcast;
+
+create table director(dir_id int,dirname varchar(255),dirphone varchar(255));
+insert into director value (401,'siddharth','9833556677');
+insert into director value (402,'nitesh','9822344632');
+insert into director value (403,'rajkumar','9045841307');
+insert into director value (404,'om','7959832946');
+insert into director value (405,'sanjay','9076879654');
+select * from director;
+
+create table movie(movie_id int,movietitle varchar(255),relesedate date,duration time,dir_id int);
+insert into movie value (11,'pathaan','2023-01-25','02:26:16',401);
+insert into movie value (12,'dangal','2016-12-23','02:41:09',402);
+insert into movie value (13,'sanju','2018-06-29','02:35:10',403);
+insert into movie value (14,'tanhaji','2020-01-10','02:15:03',404);
+insert into movie value (15,'padmaavat','2018-01-25','02:44:40',405);
+select * from movie;
+
+create table casting(star_id int,movie_id int,part varchar(255));
+insert into casting value (211,11,'actor');
+insert into casting value (212,12,'actor');
+insert into casting value (213,13,'actor');
+insert into casting value (214,14,'actor');
+insert into casting value (215,15,'actress');
+select * from casting;
+
+create table review(movie_id int,rating varchar(255),genre varchar(255));
+insert into review value (11,'4star','actions');
+insert into review value (12,'5star','sports');
+insert into review value (13,'4star','drama');
+insert into review value (14,'5star','historical');
+insert into review value (14,'4star','romance');
+select * from review;
+update review set movie_id=15 where genre='romance'
+
+(1) -Find the name of all the movies whose director is 'om'.
+
+select dir_ID from director where dirname = 'om';
+-----------------------------------------------------------------------------------------
+(2) -which movie is releasing on particular releasing date
+
+select * from movie where relesedate='2018-06-29';
+
+select relesedate from movie where movie_id='13'
+----------------------------------------------------------------------------------------------
+(3) -Display all artists who acted in a film between 2018-01-25 and 2023-01-25;
+
+select * from movie where relesedate between '2018-01-25' and '2023-01-25';
+
+select s.starname,m.movietitle,m.relesedate from starcast s,casting c,movie m
+where s.star_id=c.star_id and c.movie_id=m.movie_id and m.relesedate 
+between '2018-06-29' and '2023-01-25';
+-------------------------------------------------------------------------------------------------
+(4) -Display the names of films with the stars received and sort the result on the basis of stars
+
+select r.rating,m.movietitle,r.genre from movie m, review r where m.movie_id=r.movie_id order by r.rating desc
+--------------------------------------------------------------------------------------------------
+(5) -Update the rating of all films whose producer is 'sanjay' to 5star.
+
+step 1: find movie_id of perticular director(sanjay)
+
+select movie_id from movie where dir_id in (select dir_id from director where dirname='sanjay')
+
+step 2: update 5star rating of sanjay dirname
+ 
+update review set rating='5star' where movie_id in (select movie_id from movie where dir_id in (select dir_id from director where dirname='sanjay'));
+ 
+ 
+step 1:  find movie_id of perticular director (siddhart)
+
+select movie_id from movie where dir_id in (select dir_id from director where dirname='siddharth')
+
+step 2: update 5star rating of siddhart dirname
+
+update review set rating='5star' where movie_id=11 
+
+select * from review
+----------------------------------------------------------------------------------------------------------------
+(6)full outer join 
+
+select * from starcast right join movie on movie.movie_id=starcast.star_id
+union all
+select * from starcast left join movie on movie.movie_id=starcast.star_id;
+
+select * from review right join movie on movie.movie_id=review.movie_id;
